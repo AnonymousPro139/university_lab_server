@@ -9,9 +9,7 @@ const MySelect = async (my_db) => {
     console.log("MY USERS:", users);
 }
 
-const MySelect2 = () => {
 
-}
 export const insertUser = async (my_db, name, phone, password) => {
     await my_db.query(
         'INSERT INTO `user` (`name`, `phone`, `password`) VALUES (:name, :phone, :password)',
@@ -25,6 +23,23 @@ export const insertUser = async (my_db, name, phone, password) => {
         }
     );
     console.log('INSERTED DATA');
+}
+
+export const checkUserByPassword = async (my_db, my_sent_phone, my_sent_password) => {
+
+    const results = await my_db.query(
+        'SELECT * FROM user WHERE phone = :phone AND password = :password LIMIT 1',
+        {
+            replacements: { phone: my_sent_phone, password: my_sent_password },
+            type: QueryTypes.SELECT,
+            plain: true
+            
+        }
+    );
+
+    console.log('RESULT:', results);
+
+    return results;
 }
 
 

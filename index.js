@@ -1,7 +1,7 @@
 import express from 'express'
 import cors from 'cors';
 import my_db from './database/index.js';
-import MySelect, { insertUser } from './database/utils.js';
+import MySelect, { insertUser, checkUserByPassword } from './database/utils.js';
 
 
 const app = express()
@@ -26,7 +26,7 @@ app.get('/', (req, res) => {
   res.send('GET request!')
 })
 
-app.post('/', async (req, res) => {
+app.post('/register', async (req, res) => {
   console.log('POST HUSELT IRLEEE');
 
   // The parsed data lives in req.body
@@ -44,6 +44,37 @@ app.post('/', async (req, res) => {
     ok: true,
     message: "Hii SERVEREES hariulj bna",
   })
+})
+
+app.post('/login', async (req, res) => {
+  console.log('Login HUSELT IRLEEE');
+
+  // The parsed data lives in req.body
+  const { phone, password } = req.body;
+
+  // console.log('Received registration data:');
+  console.log('phone:', phone);
+  console.log('password:', password);
+
+  // Odoo tuhain hereglegch bga esehiig DB-eesee haiy
+  let results = await checkUserByPassword(my_db, phone, password)
+
+  if (results.length > 0) {
+
+    res.send({
+      status: 200,
+      ok: true,
+      message: "Snu, Ta amjilttai tur newterlee",
+    })
+  } else {
+    res.send({
+      status: 200,
+      ok: true,
+      message: "Uuchlaarai, Tany erh hurehgui bna!",
+    })
+  }
+
+
 })
 
 
