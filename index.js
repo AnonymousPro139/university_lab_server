@@ -1,5 +1,6 @@
 import express from 'express'
 import cors from 'cors';
+import { getJWT, verifyJWT } from './auth/index.js';
 import my_db from './database/index.js';
 import MySelect, { insertUser, checkUserByPassword } from './database/utils.js';
 
@@ -49,20 +50,28 @@ app.post('/register', async (req, res) => {
 app.post('/login', async (req, res) => {
   console.log('Login HUSELT IRLEEE');
 
-  // The parsed data lives in req.body
   const { phone, password } = req.body;
 
-  // console.log('Received registration data:');
   console.log('phone:', phone);
   console.log('password:', password);
 
   // Odoo tuhain hereglegch bga esehiig DB-eesee haiy
-  let results = await checkUserByPassword(my_db, phone, password)
+  let results = await checkUserByPassword(my_db, phone, password);
 
-  if (results.length > 0) {
+  if (results.id) {
+    // End token olgoh ajil hiine 
+
+    const myToken = getJWT("123", "user", phone);
+
+    console.log('MYTOKEN::', myToken);
+
+    // const testToken = "eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJpZCI6IjEyMyIsInJvbGUiOiJ1c2VyIiwibmFtZSI6Ijk5MTIzNDU2IiwiaWF0IjoxNzc1MjAwOTAwLCJleHAiOjE3NzUyODczMDB9.8_wKB1op3YTON9nm-eMGc8GgUEEt4msaXK7r4zS5RBQ";
+    // const isVerified = verifyJWT(testToken);
+    // console.log('isVerified:', isVerified);
 
     res.send({
       status: 200,
+      token: myToken,
       ok: true,
       message: "Snu, Ta amjilttai tur newterlee",
     })
