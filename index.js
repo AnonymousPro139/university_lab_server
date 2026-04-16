@@ -28,17 +28,16 @@ app.get('/names', (req, res) => {
 })
 
 app.post('/register', async (req, res) => {
-  console.log('POST HUSELT IRLEEE');
+  console.log('register POST HUSELT IRLEEE');
 
-  // The parsed data lives in req.body
-  const { username123, email123, password123 } = req.body;
+  const { username, email, password } = req.body;
 
   // console.log('Received registration data:');
-  console.log('Username:', username123);
-  console.log('Email:', email123);
-  console.log('Password:', password123);
+  console.log('Username:', username);
+  console.log('Email:', email);
+  console.log('Password:', password);
 
-  await insertUser(my_db, username123, email123, password123)
+  await insertUser(my_db, username, email, password)
 
   res.send({
     status: 200,
@@ -56,16 +55,13 @@ app.post('/login', async (req, res) => {
   console.log('password:', password);
 
   // Odoo tuhain hereglegch bga esehiig DB-eesee haiy
-  let results = await checkUserByPassword(my_db, phone, password);
+  let check = await checkUserByPassword(my_db, phone, password);
 
-  if (results.id) {
+  if (check == true) {
     // End token olgoh ajil hiine 
-
     const myToken = getJWT("123", "user", phone);
 
     const names = await getMyNames(my_db, phone);
-
-
     res.send({
       status: 200,
       token: myToken,
@@ -77,7 +73,7 @@ app.post('/login', async (req, res) => {
     res.send({
       status: 200,
       ok: true,
-      message: "Uuchlaarai, Tany erh hurehgui bna!",
+      message: "Uuchlaarai, Tany nuuts ug buruu bna!",
     })
   }
 
