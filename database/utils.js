@@ -42,7 +42,21 @@ export const checkUserByPassword = async (my_db, my_sent_phone, my_sent_password
     return results;
 }
 
+export const getMyNames = async ( my_db, myphone) => {
 
+    const results = await my_db.query(
+        'SELECT * FROM names WHERE phone = :phone LIMIT 1',
+        {
+            replacements: { phone: myphone },
+            type: QueryTypes.SELECT,
+            plain: true
+        }
+    );
+
+    console.log('ovog____ner:', results);
+
+    return results;
+}
 
 export default MySelect
 

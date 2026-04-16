@@ -2,7 +2,7 @@ import express from 'express'
 import cors from 'cors';
 import { getJWT, verifyJWT } from './auth/index.js';
 import my_db from './database/index.js';
-import MySelect, { insertUser, checkUserByPassword } from './database/utils.js';
+import MySelect, { insertUser, checkUserByPassword, getMyNames } from './database/utils.js';
 
 
 const app = express()
@@ -23,7 +23,7 @@ try {
 }
 
 
-app.get('/', (req, res) => {
+app.get('/names', (req, res) => {
   res.send('GET request!')
 })
 
@@ -63,15 +63,13 @@ app.post('/login', async (req, res) => {
 
     const myToken = getJWT("123", "user", phone);
 
-    console.log('MYTOKEN::', myToken);
+    const names = await getMyNames(my_db, phone);
 
-    // const testToken = "eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJpZCI6IjEyMyIsInJvbGUiOiJ1c2VyIiwibmFtZSI6Ijk5MTIzNDU2IiwiaWF0IjoxNzc1MjAwOTAwLCJleHAiOjE3NzUyODczMDB9.8_wKB1op3YTON9nm-eMGc8GgUEEt4msaXK7r4zS5RBQ";
-    // const isVerified = verifyJWT(testToken);
-    // console.log('isVerified:', isVerified);
 
     res.send({
       status: 200,
       token: myToken,
+      ovog_ner: names,
       ok: true,
       message: "Snu, Ta amjilttai tur newterlee",
     })
